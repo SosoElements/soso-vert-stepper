@@ -1,0 +1,220 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../soso-icon/soso-icon.html">
+<link rel="import" href="../soso-tooltip/soso-tooltip.html">
+
+<dom-module id="soso-vert-stepper-item">
+  <template>
+    <style>
+      #num {
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        position: relative;
+        vertical-align: middle;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        font-size: 14px;
+        font-weight: 400;
+        font-family: helvetica, sans-serif;
+        color: #000;
+        background: #dadada;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: pointer;
+      }
+
+      #num.active {
+        background: #06d0a4;
+        color: white;
+      }
+
+      #num.complete {
+        display: none;
+      }
+
+      #chk {
+        display: none;
+        background: #06d0a4;
+        color: #fff;
+        padding: 5px;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+      }
+
+      #chk.complete {
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+      }
+
+      #chk.disabled {
+        background: #f0f0f0;
+        color: #bbb;
+        pointer-events: none;
+      }
+
+      #num.disabled {
+        background: #f0f0f0;
+        color: #bbb;
+        pointer-events: none;
+      }
+    </style>
+    <div id="num">
+      <span>[[index]]</span>
+    </div>
+    <soso-icon id="chk" icon-map="[[iconMap]]" icon="check"></soso-icon>
+  </template>
+
+  <script>
+    class SosoVertStepperItem extends Polymer.Element {
+      static get is() { return 'soso-vert-stepper-item'; }
+      static get properties() {
+        return {
+          disabled: Boolean,
+          complete: Boolean,
+          index: Number,
+          active: Boolean
+        }
+      }
+      connectedCallback() {
+        super.connectedCallback();
+        this.iconMap = {
+          "check": "M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
+        };
+        this.refresh();
+      }
+      refresh() {
+        if (this.active) {
+          this.$.num.classList.add("active");
+        } else {
+          this.$.num.classList.remove("active");
+        }
+        if (this.complete) {
+          this.$.num.classList.add("complete");
+          this.$.chk.classList.add("complete");
+        } else {
+          this.$.num.classList.remove("complete");
+          this.$.chk.classList.remove("complete");
+        }
+        if (this.disabled) {
+          this.$.num.classList.add("disabled");
+          this.$.chk.classList.add("disabled");
+        } else {
+          this.$.num.classList.remove("disabled");
+          this.$.chk.classList.remove("disabled");
+        }
+      }
+    }
+    window.customElements.define(SosoVertStepperItem.is, SosoVertStepperItem);
+  </script>
+</dom-module>
+
+<dom-module id="soso-vert-stepper">
+  <template>
+    <style>
+      :host {
+        display: block;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        width: 46px;
+      }
+
+      #container {
+        padding: 8px;
+        counter-reset: step;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -ms-flex-direction: column;
+        -webkit-flex-direction: column;
+        flex-direction: column;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+      }
+
+      .bar {
+        width: 1px;
+        height: 8px;
+        background-color: var(--soso-stepper-line-color, #BDBDBD);
+      }
+
+      .preBar:first-of-type {
+        display: none;
+      }
+
+      .postBar:last-of-type {
+        display: none;
+      }
+
+      soso-tooltip {
+        color: var(--soso-tip-text-color, #000);
+        font-size: 15px;
+        font-weight: 300;
+        font-family: inherit;
+        letter-spacing: 0.03em;
+      }
+    </style>
+    <div id="container">
+      <dom-repeat items="[[steps]]">
+        <template>
+          <div class="preBar bar"></div>
+          <div>
+            <soso-vert-stepper-item index="[[index]]"></soso-vert-stepper-item>
+            <soso-tooltip position="right" offset="10">[[item.label]]</soso-tooltip>
+          </div>
+
+          <div class="postBar bar"></div>
+
+        </template>
+      </dom-repeat>
+    </div>
+  </template>
+
+  <script>
+    class SosoVertStepper extends Polymer.Element {
+      static get is() { return 'soso-vert-stepper'; }
+      static get properties() {
+        return {
+          steps: {
+            type: Array,
+            observer: 'refresh'
+          }
+        };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this._connected = true;
+        this.refresh();
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this._connected = false;
+      }
+
+      refresh() {
+        if (!this._connected) {
+          return false;
+        }
+      }
+    }
+
+    window.customElements.define(SosoVertStepper.is, SosoVertStepper);
+  </script>
+</dom-module>

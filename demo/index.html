@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>soso-vert-stepper demo</title>
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../soso-vert-stepper.html">
+
+  <custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+      soso-vert-stepper-item {
+        display: inline-block;
+        margin: 10px;
+        vertical-align: middle;
+      }
+
+      soso-vert-stepper {
+        --soso-tip-background: #494860;
+        --soso-tip-text-color: white;
+        --soso-tip-border: none;
+        margin: 0 auto;
+      }
+    </style>
+  </custom-style>
+</head>
+
+<body>
+  <div class="vertical-section-container centered">
+    <h3>Basic soso-vert-stepper demo</h3>
+    <demo-snippet>
+      <template>
+        <soso-vert-stepper-item index="1"></soso-vert-stepper-item>
+        <soso-vert-stepper-item index="2" active></soso-vert-stepper-item>
+        <soso-vert-stepper-item index="3" complete></soso-vert-stepper-item>
+        <soso-vert-stepper-item index="4" disabled></soso-vert-stepper-item>
+        <soso-vert-stepper-item index="5" active disabled></soso-vert-stepper-item>
+        <soso-vert-stepper-item index="6" complete disabled></soso-vert-stepper-item>
+      </template>
+    </demo-snippet>
+    <p></p>
+  </div>
+  <soso-vert-stepper id="stepper"></soso-vert-stepper>
+
+  <script>
+    (() => {
+      let stepper = document.getElementById("stepper");
+      let steps = [
+        { "label": "Select chart type" },
+        { "label": "Define chart labels" },
+        { "label": "Select privacy" },
+        { "label": "Publish" }
+      ];
+      stepper.steps = steps;
+    })();
+  </script>
+</body>
+
+</html>
