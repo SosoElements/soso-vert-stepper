@@ -150,7 +150,7 @@
       .bar {
         width: 1px;
         height: 8px;
-        background-color: var(--soso-stepper-line-color, #BDBDBD);
+        background-color: var(--soso-stepper-line-color, #dadada);
       }
 
       .preBar:first-of-type {
@@ -174,7 +174,7 @@
         <template>
           <div class="preBar bar"></div>
           <div>
-            <soso-vert-stepper-item index="[[index]]"></soso-vert-stepper-item>
+            <soso-vert-stepper-item data-index$="[[index]]" index="[[index]]" on-click="_onClick"></soso-vert-stepper-item>
             <soso-tooltip position="right" offset="10">[[item.label]]</soso-tooltip>
           </div>
 
@@ -212,6 +212,68 @@
         if (!this._connected) {
           return false;
         }
+      }
+
+      disableAll(value) {
+        const stepNodes = this.shadowRoot.querySelectorAll("soso-vert-stepper-item") || [];
+        for (let i = 0; i < stepNodes.length; i++) {
+          stepNodes[i].disabled = value;
+        }
+      }
+
+      disable(index, value) {
+        const stepNodes = this.shadowRoot.querySelectorAll("soso-vert-stepper-item") || [];
+        for (let i = 0; i < stepNodes.length; i++) {
+          const n = stepNodes[i];
+          let ix = +n.dataset.index;
+          if (ix === index) {
+            n.disabled = value;
+            break;
+          }
+        }
+      }
+
+      setActive(index) {
+        const stepNodes = this.shadowRoot.querySelectorAll("soso-vert-stepper-item") || [];
+        for (let i = 0; i < stepNodes.length; i++) {
+          const n = stepNodes[i];
+          let ix = +n.dataset.index;
+          n.active = (ix === index);
+        }
+      }
+
+      setComplete(index, value) {
+        const stepNodes = this.shadowRoot.querySelectorAll("soso-vert-stepper-item") || [];
+        for (let i = 0; i < stepNodes.length; i++) {
+          const n = stepNodes[i];
+          let ix = +n.dataset.index;
+          if (ix === index) {
+            n.complete = value;
+            break;
+          }
+        }
+      }
+
+      completAll(value) {
+        const stepNodes = this.shadowRoot.querySelectorAll("soso-vert-stepper-item") || [];
+        for (let i = 0; i < stepNodes.length; i++) {
+          stepNodes[i].complete = value;
+        }
+      }
+
+      uncompleteAfter(index) {
+        const stepNodes = this.shadowRoot.querySelectorAll("soso-vert-stepper-item") || [];
+        for (let i = 0; i < stepNodes.length; i++) {
+          const n = stepNodes[i];
+          let ix = +n.dataset.index;
+          if (ix > index) {
+            n.complete = false;
+          }
+        }
+      }
+
+      _onClick(event) {
+        this.dispatchEvent(new CustomEvent('select', { bubbles: true, composed: true, detail: { index: event.model.index, data: event.model.item } }));
       }
     }
 
