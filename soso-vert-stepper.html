@@ -82,14 +82,23 @@
       static get is() { return 'soso-vert-stepper-item'; }
       static get properties() {
         return {
-          disabled: Boolean,
-          complete: Boolean,
+          disabled: {
+            type: Boolean,
+            observer: 'refresh'
+          },
+          complete: {
+            type: Boolean,
+            observer: 'refresh'
+          },
           index: {
             type: Number,
             observer: '_onIndex'
           },
           indexDisplay: Number,
-          active: Boolean
+          active: {
+            type: Boolean,
+            observer: 'refresh'
+          }
         }
       }
       connectedCallback() {
