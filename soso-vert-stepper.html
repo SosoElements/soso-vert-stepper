@@ -97,7 +97,7 @@
           indexDisplay: Number,
           active: {
             type: Boolean,
-            observer: 'refresh'
+            observer: '_onActive'
           }
         }
       }
@@ -110,6 +110,12 @@
       }
       _onIndex() {
         this.indexDisplay = (this.index || 0) + 1;
+      }
+      _onActive() {
+        if (this.active) {
+          this.complete = false;
+        }
+        this.refresh();
       }
       refresh() {
         this._onIndex();
@@ -291,7 +297,10 @@
       }
 
       _onClick(event) {
-        this.dispatchEvent(new CustomEvent('select', { bubbles: true, composed: true, detail: { index: event.model.index, data: event.model.item } }));
+        let t = event.target;
+        if (!t.disabled) {
+          this.dispatchEvent(new CustomEvent('select', { bubbles: true, composed: true, detail: { index: event.model.index, data: event.model.item } }));
+        }
       }
     }
 
